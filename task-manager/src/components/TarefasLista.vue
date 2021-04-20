@@ -20,7 +20,8 @@
                 v-for="tarefa in tarefas"
                 :key="tarefa.id"
                 :tarefa="tarefa"
-                @editar="selecionarTarefaParaEdicao"/>
+                @editar="selecionarTarefaParaEdicao"
+                @deletar="deletarTarefa"/>
         </ul>
 
         <p v-else>Nenhuma tarefa criada.</p>
@@ -28,7 +29,8 @@
         <TarefaSalvar
             v-if="exibirFormulario"
             :tarefa="TarefaSelecionada"
-            @criar="criarTarefa"/>
+            @criar="criarTarefa"
+            @editar="editarTarefa"/>
 
     </dir>
 </template>
@@ -54,9 +56,9 @@ export default {
     },
     created() {
         axios.get(`${config.apiURL}/tarefas`)
-        .then((respose) => {
-            console.log(respose)
-            this.tarefas = respose.data
+        .then((response) => {
+            console.log('GET /tarefas', response)
+            this.tarefas = response.data
         })
     },
     methods: {
@@ -65,8 +67,33 @@ export default {
             .then((response) => {
                 console.log('POST /tarefas', response)
                 this.tarefas.push(response.data)
-                this.exibirFormulario = false
+                this.resetar()
             })
+        },
+        editarTarefa(tarefa) {
+            console.log('Editar: ', tarefa)
+            axios.put(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa)
+            .then(response => {
+                console.log(`PUT /tarefas/${tarefa.id}`, response)
+                const indice = this.tarefas.findIndex(t => t.id === tarefa.id)
+                this.tarefas.splice(indice, 1, tarefa)
+                this.resetar()
+            })
+        },
+        deletarTarefa(tarefa) {
+            const confirmar = window.confirm(`Deseja deletar a tarefa "${tarefa.titulo}"?`)
+            if(confirmar) {
+                axios.delete(`${config.apiURL}/tarefas/${tarefa.id}`)
+                .then(response => {
+                    console.log(`DELETE /tarefas/${tarefa.id}`, response)
+                    const indice = this.tarefas.findIndex(t => t.id === tarefa.id)
+                    this.tarefas.splice(indice, 1)
+                })
+            }
+        },
+        resetar() {
+            this.TarefaSelecionada = undefined
+            this.exibirFormulario = false
         },
         selecionarTarefaParaEdicao(tarefa) {
             this.TarefaSelecionada = tarefa

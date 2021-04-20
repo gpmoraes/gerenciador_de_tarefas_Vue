@@ -68,7 +68,8 @@ export default {
     },
     methods: {
         salvar() {
-            this.$emit('criar', this.tarefaLocal)
+            const operacao = !this.tarefa ? 'criar' : 'editar'
+            this.$emit(operacao, this.tarefaLocal)
             this.tarefaLocal = { titulo: '', concluido: false}
         }
     }

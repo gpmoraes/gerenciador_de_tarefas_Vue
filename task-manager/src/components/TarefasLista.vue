@@ -39,9 +39,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from './../axios'
 
-import config from './../config/config'
 import TarefaSalvar from './TarefaSalvar.vue'
 import TarefaListaItem from './TarefasListaIten.vue'
 
@@ -73,7 +72,7 @@ export default {
         }
     },
     created() {
-        axios.get(`${config.apiURL}/tarefas`)
+        axios.get(`/tarefas`)
         .then((response) => {
             console.log('GET /tarefas', response)
             this.tarefas = response.data
@@ -99,7 +98,7 @@ export default {
     },
     methods: {
         criarTarefa(tarefa) {
-            axios.post(`${config.apiURL}/tarefas`, tarefa)
+            axios.post(`/tarefas`, tarefa)
             .then((response) => {
                 console.log('POST /tarefas', response)
                 this.tarefas.push(response.data)
@@ -108,7 +107,7 @@ export default {
         },
         editarTarefa(tarefa) {
             console.log('Editar: ', tarefa)
-            axios.put(`${config.apiURL}/tarefas/${tarefa.id}`, tarefa)
+            axios.put(`/tarefas/${tarefa.id}`, tarefa)
             .then(response => {
                 console.log(`PUT /tarefas/${tarefa.id}`, response)
                 const indice = this.tarefas.findIndex(t => t.id === tarefa.id)
@@ -119,7 +118,7 @@ export default {
         deletarTarefa(tarefa) {
             const confirmar = window.confirm(`Deseja deletar a tarefa "${tarefa.titulo}"?`)
             if(confirmar) {
-                axios.delete(`${config.apiURL}/tarefas/${tarefa.id}`)
+                axios.delete(`/tarefas/${tarefa.id}`)
                 .then(response => {
                     console.log(`DELETE /tarefas/${tarefa.id}`, response)
                     const indice = this.tarefas.findIndex(t => t.id === tarefa.id)

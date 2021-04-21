@@ -22,4 +22,25 @@ import config from './config/config'
 const instace = axios.create({})
 instace.defaults.baseURL = config.apiURL
 
+// É possível interceptar requisições, antes de serem enviadas para o servidor e
+// por exemplo, podemos mudar, inserir informeções nas requisições
+instace.interceptors.request.use(config => {
+    console.log('Interceptando requisição: ', config)
+    config.data = {
+        ...config.data,
+        insertedInfo: 'Dado inserido na interceptação.' 
+    }
+    // return config
+    return new Promise((resolve) => {
+        console.log('Fazendo requisição aguardar...')
+        setTimeout(() => {
+            console.log('Enviando requisição...')
+            resolve(config)
+        }, 2000)
+    })
+}, error => {
+    console.log('Erro ao realizar requisição: ', error)
+    return Promise.reject(error)
+})
+
 export default instace

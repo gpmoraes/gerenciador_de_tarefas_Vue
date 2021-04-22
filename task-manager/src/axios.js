@@ -25,11 +25,21 @@ instace.defaults.baseURL = config.apiURL
 // É possível interceptar requisições, antes de serem enviadas para o servidor e
 // por exemplo, podemos mudar, inserir informeções nas requisições
 instace.interceptors.request.use(config => {
+
     console.log('Interceptando requisição: ', config)
+   
     config.data = {
         ...config.data,
         insertedInfo: 'Dado inserido na interceptação.' 
     }
+
+    //Se caso a api necessite de autenticação pode ser necessário inserir um 
+    // cabecalho com as informações, ela será adicionada a todas as requisições do axios
+
+    config.headers.common['Autorization'] = `Bearer tolken_jwt`
+    // Adicionando a um tipo de requisição 
+    config.headers.put['Meu-cabecalho'] = `Cabecalho customizado`
+   
     // return config
     return new Promise((resolve) => {
         console.log('Fazendo requisição aguardar...')

@@ -105,25 +105,46 @@ export default {
                 this.resetar()
             })
         },
-        editarTarefa(tarefa) {
+        async editarTarefa(tarefa) {
             console.log('Editar: ', tarefa)
-            axios.put(`/tarefas/${tarefa.id}`, tarefa)
-            .then(response => {
+            // axios.put(`/tarefas/${tarefa.id}`, tarefa)
+            // .then(response => {
+            //     console.log(`PUT /tarefas/${tarefa.id}`, response)
+            //     const indice = this.tarefas.findIndex(t => t.id === tarefa.id)
+            //     this.tarefas.splice(indice, 1, tarefa)
+            //     this.resetar()
+            // })
+
+            try {
+                const response = await axios.put(`/tarefas/${tarefa.id}`, tarefa)
                 console.log(`PUT /tarefas/${tarefa.id}`, response)
                 const indice = this.tarefas.findIndex(t => t.id === tarefa.id)
                 this.tarefas.splice(indice, 1, tarefa)
-                this.resetar()
-            })
+                this.resetar() 
+            } catch (error) {
+                console.log('Erro ao editar tarefa: ', error)
+            } finally {
+                console.log('Executa sempre!')
+            }
         },
-        deletarTarefa(tarefa) {
+        async deletarTarefa(tarefa) {
             const confirmar = window.confirm(`Deseja deletar a tarefa "${tarefa.titulo}"?`)
             if(confirmar) {
-                axios.delete(`/tarefas/${tarefa.id}`)
-                .then(response => {
+                // axios.delete(`/tarefas/${tarefa.id}`)
+                // .then(response => {
+                //     console.log(`DELETE /tarefas/${tarefa.id}`, response)
+                //     const indice = this.tarefas.findIndex(t => t.id === tarefa.id)
+                //     this.tarefas.splice(indice, 1)
+                // })
+
+                try {
+                    const response = await axios.delete(`/tarefas/${tarefa.id}`)
                     console.log(`DELETE /tarefas/${tarefa.id}`, response)
                     const indice = this.tarefas.findIndex(t => t.id === tarefa.id)
                     this.tarefas.splice(indice, 1)
-                })
+                } catch (error) {
+                    console.log('Erro ao deletar tarefa: ', error)
+                }
             }
         },
         exibirFormularioCriarTarefa() {

@@ -53,4 +53,18 @@ instace.interceptors.request.use(config => {
     return Promise.reject(error)
 })
 
+// Interceptadores pondem ser utilizados para respostas, aqui pegamos os dados
+// antes que eles cheguem na aplicação
+
+// instace.interceptors.response.use(response => {
+//     console.log('Interceptando resposta', response)
+//     if (Array.isArray(response.data)) {
+//         response.data = response.data.slice(1, 3)
+//     }
+//     return response
+// }, error => {
+//     console.log('Erro capturado na responsta: ', error)
+//     return Promise.reject(error)
+// })
+
 export default instace
